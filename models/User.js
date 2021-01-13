@@ -18,11 +18,24 @@ const userSchema = new mongoose.Schema({
 
 // hooks
 userSchema.pre('save', async function(next) {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
-    console.log(this)
-    next();
-})
+        const salt = await bcrypt.genSalt();
+        this.password = await bcrypt.hash(this.password, salt);
+        console.log(this)
+        next();
+    })
+    // Login schema
+
+userSchema.statics.login = async function(email, password) {
+    const user = await this.findOne({ email });
+    if (user) {
+        const auth = await bcrypt.compare(password, user.password);
+        if (auth) {
+            return user;
+        }
+        throw Error('password is not correct ')
+    }
+    throw Error('email is not here')
+};
 
 const User = mongoose.model('user', userSchema);
 

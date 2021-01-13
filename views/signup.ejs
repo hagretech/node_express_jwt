@@ -41,6 +41,11 @@
                     emailErrors.textContent = data.errors.email
                     PasswordErrors.textContent = data.errors.password
                 }
+                // redirction if user is created
+                if (data.user) {
+                    location.assign('/login')
+                }
+
             } catch {
 
             }
